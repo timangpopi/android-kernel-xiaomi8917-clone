@@ -385,7 +385,7 @@ static ssize_t max_comp_streams_store(struct device *dev,
 	down_write(&zram->init_lock);
 	if (init_done(zram)) {
 		if (!zcomp_set_max_streams(zram->comp, num)) {
-			pr_info("Cannot change max compression streams\n");
+			pr_err("Cannot change max compression streams\n");
 			ret = -EINVAL;
 			goto out;
 		}
@@ -420,7 +420,7 @@ static ssize_t comp_algorithm_store(struct device *dev,
 	down_write(&zram->init_lock);
 	if (init_done(zram)) {
 		up_write(&zram->init_lock);
-		pr_info("Can't change algorithm for initialized device\n");
+		pr_err("Can't change algorithm for initialized device\n");
 		return -EBUSY;
 	}
 	strlcpy(zram->compressor, buf, sizeof(zram->compressor));
@@ -674,7 +674,7 @@ static int zram_bvec_read(struct zram *zram, struct bio_vec *bvec,
 		uncmem = user_mem;
 
 	if (!uncmem) {
-		pr_info("Unable to allocate temp memory\n");
+		pr_err("Unable to allocate temp memory\n");
 		ret = -ENOMEM;
 		goto out_cleanup;
 	}
@@ -774,7 +774,7 @@ static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec, u32 index,
 	if (!handle) {
 		if (printk_timed_ratelimit(&zram_rs_time,
 					   ALLOC_ERROR_LOG_RATE_MS))
-			pr_info("Error allocating memory for compressed page: %u, size=%zu\n",
+			pr_err("Error allocating memory for compressed page: %u, size=%zu\n",
 				index, clen);
 
 		ret = -ENOMEM;
@@ -1089,7 +1089,7 @@ static ssize_t disksize_store(struct device *dev,
 
 	comp = zcomp_create(zram->compressor, zram->max_comp_streams);
 	if (IS_ERR(comp)) {
-		pr_info("Cannot initialise %s compressing backend\n",
+		pr_err("Cannot initialise %s compressing backend\n",
 				zram->compressor);
 		err = PTR_ERR(comp);
 		goto out_free_meta;
@@ -1097,7 +1097,7 @@ static ssize_t disksize_store(struct device *dev,
 
 	down_write(&zram->init_lock);
 	if (init_done(zram)) {
-		pr_info("Cannot change disksize for initialized device\n");
+		pr_err("Cannot change disksize for initialized device\n");
 		err = -EBUSY;
 		goto out_destroy_comp;
 	}
@@ -1272,7 +1272,7 @@ static int zram_add(void)
 	/* gendisk structure */
 	zram->disk = alloc_disk(1);
 	if (!zram->disk) {
-		pr_warn("Error allocating disk structure for device %d\n",
+		pr_err("Error allocating disk structure for device %d\n",
 			device_id);
 		ret = -ENOMEM;
 		goto out_free_queue;
@@ -1324,7 +1324,7 @@ static int zram_add(void)
 	zram->meta = NULL;
 	zram->max_comp_streams = CONFIG_NR_CPUS;
 
-	pr_info("Added device: %s\n", zram->disk->disk_name);
+	pr_err("Added device: %s\n", zram->disk->disk_name);
 	return device_id;
 
 out_free_queue:
@@ -1369,7 +1369,7 @@ static int zram_remove(struct zram *zram)
 	zram_reset_device(zram);
 	bdput(bdev);
 
-	pr_info("Removed device: %s\n", zram->disk->disk_name);
+	pr_err("Removed device: %s\n", zram->disk->disk_name);
 
 	idr_remove(&zram_index_idr, zram->disk->first_minor);
 	blk_cleanup_queue(zram->disk->queue);
@@ -1454,13 +1454,13 @@ static int __init zram_init(void)
 
 	ret = class_register(&zram_control_class);
 	if (ret) {
-		pr_warn("Unable to register zram-control class\n");
+		pr_err("Unable to register zram-control class\n");
 		return ret;
 	}
 
 	zram_major = register_blkdev(0, "zram");
 	if (zram_major <= 0) {
-		pr_warn("Unable to get major number\n");
+		pr_err("Unable to get major number\n");
 		class_unregister(&zram_control_class);
 		return -EBUSY;
 	}
