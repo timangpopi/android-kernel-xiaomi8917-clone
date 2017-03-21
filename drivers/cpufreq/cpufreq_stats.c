@@ -639,6 +639,15 @@ static void cpufreq_stats_update_policy_cpu(struct cpufreq_policy *policy)
 
 	pr_debug("Updating stats_table for new_cpu %u from last_cpu %u\n",
 			policy->cpu, policy->last_cpu);
+
+	stat = per_cpu(cpufreq_stats_table, policy->cpu);
+	if (stat) {
+		kfree(stat->time_in_state);
+		kfree(stat);
+	}
+
+	stat = per_cpu(cpufreq_stats_table, policy->last_cpu);
+
 	per_cpu(cpufreq_stats_table, policy->cpu) = per_cpu(cpufreq_stats_table,
 			policy->last_cpu);
 	per_cpu(cpufreq_stats_table, policy->last_cpu) = NULL;
