@@ -1,0 +1,16 @@
+version: 2.1
+jobs:
+  compile:
+    docker:
+      - image: ubuntu:18.04
+    steps:
+      - run: apt-get -y update && apt-get -y upgrade && apt-get -y install bc build-essential zip curl libstdc++6 git wget
+      - run: git clone -j16 https://github.com/timangpopi/android-kernel-xiaomi8917-clone.git -b stag .
+      - run: wget https://raw.githubusercontent.com/timangpopi/gehu/master/horizon
+      - run: chmod +x horizon
+      - run: bash horizon
+workflows:
+  version: 2.1
+  cooking:
+    jobs:
+      - compile
