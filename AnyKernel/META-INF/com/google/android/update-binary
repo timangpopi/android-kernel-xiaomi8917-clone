@@ -118,7 +118,7 @@ elif [ ! "$(getprop ro.product.device 2>/dev/null)" -a ! "$(getprop ro.build.pro
 fi;
 
 if [ "$(file_getprop anykernel.sh do.devicecheck)" == 1 ]; then
-  ui_print "Tungguin bentar beb :v";
+  ui_print "Cuma Bentar kok :")";
   device="$(getprop ro.product.device)";
   product="$(getprop ro.build.product)";
   for testname in $(file_getprop anykernel.sh 'device.name.*'); do
@@ -160,7 +160,7 @@ if [ "$supported_ver" ]; then
   fi;
 fi;
 
-ui_print "Pure kernel.Jadi lupain aja klo mao set² awowkwk tapi meskipun bisa sih :v pake KA recommended.";
+ui_print "Pure kernel ini.Jangan lupa sholat,dzikir,ibadah jgn kebablasan main kernel%rom terus :")";
 for i in $($bb --list); do
   $bb ln -s $bb bin/$i;
 done;
