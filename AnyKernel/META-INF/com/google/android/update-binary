@@ -71,7 +71,7 @@ if [ -f /tmp/anykernel/version ]; then
   ui_print " ";
 fi;
 ui_print " ";
-ui_print "AnyKernel2 by osm0sis @ xda-developers";
+ui_print "SteelHeart.Q-1 @Mmhmdfas";
 ui_print " ";
 ui_print " ";
 
