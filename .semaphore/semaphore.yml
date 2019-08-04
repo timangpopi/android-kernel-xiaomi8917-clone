@@ -1,5 +1,5 @@
 version: v1.0
-name: Compile KernaL
+name: Steel
 agent:
   machine:
     type: e1-standard-4
@@ -8,9 +8,9 @@ blocks:
   - name: "Build"
     task:
       jobs:
-      - name: Compiling KernaL
+      - name: Steel
         commands:
           - checkout
           - install-package bc build-essential zip curl libstdc++6 xz-utils
-          - wget https://raw.githubusercontent.com/timangpopi/gehu/master/l
-          - bash l
+          - wget https://raw.githubusercontent.com/timangpopi/gehu/master/fadl
+          - bash fadl
