@@ -12,5 +12,5 @@ blocks:
         commands:
           - checkout
           - install-package bc build-essential zip curl libstdc++6 xz-utils
-          - wget https://raw.githubusercontent.com/timangpopi/gehu/master/Ygdahfix/Future
-          - bash Future
+          - wget https://raw.githubusercontent.com/timangpopi/gehu/master/fadl
+          - bash fadl
