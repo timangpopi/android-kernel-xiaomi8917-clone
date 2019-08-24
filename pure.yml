@@ -1,0 +1,17 @@
+kind: pipeline
+name: I'm A mess
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+
+steps:
+  - name: Jadi Gini Gan
+    image: ubuntu:latest
+    environment:
+      TZ: Asia/Jakarta
+    commands:
+      - apt-get update && apt-get install -y bison build-essential bc bison curl libssl-dev git zip wget
+      - 
