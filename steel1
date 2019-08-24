@@ -1,0 +1,49 @@
+#!bin/bash
+echo "Welcome SteelHeart Kornol Plox"
+echo "Time To clone Plox"
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm64 gcc
+git clone https://github.com/fadlyas/anykernel2
+echo "Done"
+echi "Time To Build Plox"
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
+echo "Posting Tele Dulu Ye kan siapa tau diliat mantan"
+curl -s -F chat_id=-1001158707255 -F sticker="CAADBQADsAADfULDLi7M_9kl2KMnFgQ" https://api.telegram.org/bot804021619:AAGsNtz-PiDmnuyoIg_lpKVghK_8WmxSbIQ/sendSticker
+curl -s -X POST https://api.telegram.org/bot804021619:AAGsNtz-PiDmnuyoIg_lpKVghK_8WmxSbIQ/sendMessage?chat_id=-1001158707255 -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>SteelHeart CI new build is up!!</b>%0ACompile Started"'!'"%0A<b>For device</b> <code>Rolex (Redmi 4A)</code>%0A<b>For Android Oreo or Android Pie</b>%0A<b>Under Commit</b> <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0A<b>Compiler</b> <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #untested"
+tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
+START=$(date +"%s")
+export ARCH=arm64
+export KBUILD_BUILD_USER=mhmmdfas
+export KBUILD_BUILD_HOST=teambuluburung
+export USE_CCACHE=1
+export CACHE_DIR=~/.ccache
+# Send private info
+function sendpriv() {
+    curl -s -X POST "https://api.telegram.org/bot804021619:AAGsNtz-PiDmnuyoIg_lpKVghK_8WmxSbIQ" \
+        -d chat_id="784548477" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=html" \
+        -d text="SteelHeart CI Started%0ADrone triggered by: <code>${DRONE_BUILD_EVENT}</code> event%0AJob name: Jadi Laper%0ACommit point: <a href='${DRONE_COMMIT_LINK}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://cloud.drone.io/fadlyas/android-kernel-xiaomi-8917-S/${DRONE_BUILD_NUMBER}'>here</a>"
+}
+# Fin Error
+function finerr() {
+        sprunge
+        curl -s -X POST https://api.telegram.org/bot804021619:AAGsNtz-PiDmnuyoIg_lpKVghK_8WmxSbIQ/sendMessage?chat_id=-1001158707255 -d "disable_web_page_preview=true" -d "parse_mode=html&text=Build throw an error(s) "
+        exit 1
+}
+make -s -C $(pwd) O=out rolex_defconfig
+make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j60 -l50 2>&1| tee build.log
+if ! [ -a $IMAGE ]; then
+	exit 1
+fi
+cp out/arch/arm64/boot/Image.gz-dtb anykernel2/zImage
+paste
+cd anykernel2
+zip -r9 SteelHeart-Hardcore-${tanggal}.zip *
+END=$(date +"%s")
+DIFF=$(($END - $START))
+curl -F chat_id="-1001158707255" -F document=@"SteelHeart-Hardcore-${tanggal}.zip " -F "disable_web_page_preview=true" -F "parse_mode=html" -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s) | #sunny | #stable | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>" https://api.telegram.org/bot804021619:AAGsNtz-PiDmnuyoIg_lpKVghK_8WmxSbIQ/sendDocument
+cd ..
+rm -rf out
+rm -rf anykernel2
+rm -rf *
