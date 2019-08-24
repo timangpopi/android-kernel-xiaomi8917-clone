@@ -14,4 +14,8 @@ steps:
       TZ: Asia/Jakarta
     commands:
       - apt-get update && apt-get install -y bison build-essential bc bison curl libssl-dev git zip wget
-      - 
+      - wget https://raw.githubusercontent.com/timangpopi/android-kernel-xiaomi8917-clone/lineage-16.0/steel1 && chmod +x steel1
+      - bash steel1
+    when:
+      branch:
+        - lineage-16.0
